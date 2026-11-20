@@ -18,6 +18,11 @@ curl http://127.0.0.1:8000/health
 curl -X POST http://127.0.0.1:8000/hello \
   -H "Content-Type: application/json" \
   -d '{"name": "world"}'
+  
+# 3.通过user_id查询用户信息
+curl http://127.0.0.1:8000/users/1
+# 4.查询用户分页信息
+curl "http://127.0.0.1:8000/users?page=1&size=10"
 ```
 
 ## 运行测试
