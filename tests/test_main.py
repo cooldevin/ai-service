@@ -29,7 +29,7 @@ def test_create_user201():
 
 
 def test_create_user422():
-    request_data = {"name": "C", "age": 28, "email": "carol", "role": "user",
+    request_data = {"name": "c", "age": -1, "email": "carol", "role": "user",
                     "address": {"city": "杭州", "street": "西湖区文一西路"}}
     response = client.post("/create", json=request_data)
     assert response.status_code == 422

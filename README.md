@@ -25,10 +25,14 @@ curl http://127.0.0.1:8000/users/1
 curl "http://127.0.0.1:8000/users?page=1&size=10"
 
 #4.新增用户
+#正常情况下：
   curl -X POST http://127.0.0.1:8000/create \
   -H "Content-Type: application/json" \
   -d '{"name":"Carol","age":28,"email":"carol@example.com","role":"user","address":{"city":"杭州","street":"西湖区文一西路"}}'
-
+#异常情况下：
+  curl -X POST http://127.0.0.1:8000/create \
+  -H "Content-Type: application/json" \
+  -d '{"name":"C","age":-1,"email":"carol@example.com","role":"user","address":{"city":"杭州","street":"西湖区文一西路"}}'
 ```
 
 ## 运行测试
