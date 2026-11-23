@@ -35,6 +35,6 @@ def test_create_user422():
     assert response.status_code == 422
 
 
-def test_create_user404():
-    response = client.get("/create/1")
+def test_get_user404():
+    response = client.get("/users/999")
     assert response.status_code == 404
