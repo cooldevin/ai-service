@@ -39,7 +39,7 @@ USERS = {
     3: {"user_id": 3, "name": "wangwu", "email": "wangwu@email.com"},
 }
 
-@app.post("create",response_model = UserOut,status_code = 201)
+@app.post("/create",response_model = UserOut,status_code = 201)
 def create_user(req: UserCreate):
     new_id = max(USERS) + 1 if USERS else 1
     user = {"user_id":new_id,"name":req.name, "email" : req.email}
