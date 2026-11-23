@@ -15,6 +15,26 @@ def test_get_user():
     response = client.get("/users/1")
     assert response.status_code == 200
 
+
 def test_get_user_page():
     response = client.get("/users/pageList?page=1&size=10")
     assert response.status_code == 200
+
+
+def test_create_user201():
+    request_data = {"name": "Carol", "age": 28, "email": "carol@example.com", "role": "user",
+                    "address": {"city": "杭州", "street": "西湖区文一西路"}}
+    response = client.post("/create", json=request_data)
+    assert response.status_code == 201
+
+
+def test_create_user422():
+    request_data = {"name": "C", "age": 28, "email": "carol", "role": "user",
+                    "address": {"city": "杭州", "street": "西湖区文一西路"}}
+    response = client.post("/create", json=request_data)
+    assert response.status_code == 422
+
+
+def test_create_user404():
+    response = client.get("/create/1")
+    assert response.status_code == 404
