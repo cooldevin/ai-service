@@ -1,9 +1,12 @@
 # main.py
+import time
+
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from enum import Enum
 
+import asyncio
 
 app = FastAPI(title="ai-service")
 
@@ -68,6 +71,21 @@ async def get_user(user_id: int):
     if user is None:
         raise HTTPException(status_code=404, detail=f"user {user_id} not found")
     return user
+
+@app.get("/demo/sync-sleep")
+def sync_sleep(seconds: float=2):
+    time.sleep(seconds)
+    return {"模式":"同步方法睡眠time.sleep","睡眠时间":seconds}
+
+@app.get("/demo/async-sleep")
+async def async_sleep(seconds: float=2):
+    await asyncio.sleep(seconds)
+    return {"模式":"异步唤醒方法睡眠asyncio.sleep","睡眠时间":seconds}
+
+@app.get("/demo/async-blocked")
+async def async_blocked(seconds:float =2):
+    time.sleep(seconds)
+    return {"模式":"异步唤醒方法调用同步睡眠time.sleep","睡眠时间":seconds}
 
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
