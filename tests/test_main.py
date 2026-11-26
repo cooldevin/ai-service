@@ -38,3 +38,11 @@ def test_create_user422():
 def test_get_user404():
     response = client.get("/users/999")
     assert response.status_code == 404
+
+
+def test_settings_read_env(monkeypatch):
+    monkeypatch.setenv("LOG_LEVEL", "DEBUG")
+    import importlib
+    import ai_service.config as config
+    importlib.reload(config)
+    assert config.settings.log_level == "DEBUG"
