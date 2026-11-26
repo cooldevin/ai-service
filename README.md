@@ -22,7 +22,7 @@ curl -X POST http://127.0.0.1:8000/hello \
 # 3.通过user_id查询用户信息
 curl http://127.0.0.1:8000/users/1
 # 4.查询用户分页信息
-curl "http://127.0.0.1:8000/user?pageList=1&size=10"
+curl "http://127.0.0.1:8000/users?pageList=1&size=10"
 
 #4.新增用户
 #正常情况下：
@@ -33,9 +33,6 @@ curl "http://127.0.0.1:8000/user?pageList=1&size=10"
   curl -X POST http://127.0.0.1:8000/create \
   -H "Content-Type: application/json" \
   -d '{"name":"C","age":-1,"email":"carol@example.com","role":"user","address":{"city":"杭州","street":"西湖区文一西路"}}'
-  
-  async-sleep 5并发 2.0秒
-  async-blocked 8并发 10.0秒 (async里sync-sleep 5并发：2.0秒)（占5个线程）
 ```
 ```bash
 
@@ -49,3 +46,8 @@ LLM_API_KEY：现在是空占位，调大模型时再填
 ```bash
 uv run pytest
 ```
+
+## 异步测试效果
+    async-sleep 5并发 2.0秒
+    async-blocked 8并发 10.0秒 (async里sync-sleep 5并发：2.0秒)（占5个线程）
+    sync-sleep 5并发 2.0秒 占五个线程
