@@ -22,7 +22,7 @@ curl -X POST http://127.0.0.1:8000/hello \
 # 3.通过user_id查询用户信息
 curl http://127.0.0.1:8000/users/1
 # 4.查询用户分页信息
-curl "http://127.0.0.1:8000/users?pageList?page=1&size=10"
+curl "http://127.0.0.1:8000/users/pageList?page=1&size=10"
 
 #4.新增用户
 #正常情况下：
