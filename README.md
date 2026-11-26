@@ -2,6 +2,12 @@
 
 基于 FastAPI 的最小 HTTP 服务示例，提供 `/health` 健康检查和 `/hello` 问候接口。
 
+## 项目生成
+```bash
+    生成骨架：uv init ai-service
+    安装依赖：uv add fastapi uvicorn pydantic pytest httpx
+```
+
 ## 启动服务
 
 ```bash
@@ -36,7 +42,7 @@ curl "http://127.0.0.1:8000/users/pageList?page=1&size=10"
 ```
 ```bash
 
-测试：uv run pytest
+env测试：uv run pytest
 LOG_LEVEL：默认INFO ,改 【.env】 即可
 LLM_API_KEY：现在是空占位，调大模型时再填
 仓库只保留 【.env.example】 真实【.env】不能提交
@@ -47,7 +53,12 @@ LLM_API_KEY：现在是空占位，调大模型时再填
 uv run pytest
 ```
 
-## 异步测试效果
+## 测试效果
+### 异步测试效果
     async-sleep 5并发 2.0秒
     async-blocked 5并发 10.0秒 (async里写time.sleep会堵死事件循环)
     sync-sleep 5并发 2.0秒 占五个线程
+### env测试效果：uv run pytest
+LOG_LEVEL：默认INFO ,改 【.env】 即可
+LLM_API_KEY：现在是空占位，调大模型时再填
+仓库只保留 【.env.example】 真实【.env】不能提交
