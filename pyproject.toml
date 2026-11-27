@@ -9,6 +9,7 @@ authors = [
 requires-python = ">=3.12"
 dependencies = [
     "fastapi>=0.165.0",
+    "openai>=3.60.0",
     "pydantic>=2.14.4",
     "pydantic-settings>=2.16.3",
     "pytest>=9.2.0",

@@ -46,3 +46,26 @@ def test_settings_read_env(monkeypatch):
     import ai_service.config as config
     importlib.reload(config)
     assert config.settings.log_level == "DEBUG"
+
+
+def test_chat(monkeypatch):
+    async def fake_chat(messages, temperature=0.7, max_tokens=1024):
+        return {"reply": "你好", "model": "qwen-plus",
+                "input_tokens": 10, "output_tokens": 5, "duration_ms": 123}
+
+    monkeypatch.setattr("ai_service.llm.chat", fake_chat)
+    resp = client.post("/chat", json={"message": "你好"})
+    assert resp.status_code == 200
+    assert resp.json()["reply"] == "你好"
+
+
+def test_chat_stream(monkeypatch):
+    async def fake_stream(messages, temperature=0.7, max_tokens=1024):
+        yield "你"
+        yield "好"
+
+    monkeypatch.setattr("ai_service.llm.chat_stream", fake_stream)
+    resp = client.post("/chat/stream", json={"message": "你好"})
+    assert resp.status_code == 200
+    assert "text/event-stream" in resp.headers["content-type"]
+    assert "data:" in resp.text

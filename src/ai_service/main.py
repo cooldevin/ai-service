@@ -1,14 +1,16 @@
 # main.py
 import time
-
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from enum import Enum
 import logging
 from ai_service.config import settings
-
 import asyncio
+import json
+from fastapi.responses import StreamingResponse
+from pydantic import BaseModel, Field
+from ai_service import llm
 
 app = FastAPI(title="ai-service")
 
@@ -115,3 +117,41 @@ logging.basicConfig(
 )
 logger = logging.getLogger("ai-service")
 logger.info("ai-service start 已启动，日志等级 log_level = %s", settings.log_level)
+
+
+class ChatRequest(BaseModel):
+    message: str = Field(min_length=1, max_length=4000)
+    system: str = "你是一个有帮助的助手，用中文回答。"
+    temperature: float = 0.7
+
+
+class ChatResponse(BaseModel):
+    reply: str
+    model: str
+    input_tokens: int
+    output_tokens: int
+    duration_ms: int
+
+
+@app.post("/chat", response_model=ChatResponse)
+async def chat_endpoint(req: ChatRequest):
+    messages = [
+        {"role": "system", "content": req.system},
+        {"role": "user", "content": req.message},
+    ]
+    return await llm.chat(messages, temperature=req.temperature)
+
+
+@app.post("/chat/stream")
+async def chat_stream_endpoint(req: ChatRequest):
+    messages = [
+        {"role": "system", "content": req.system},
+        {"role": "user", "content": req.message},
+    ]
+
+    async def gen():
+        async for piece in llm.chat_stream(messages, temperature=req.temperature):
+            yield f"data: {json.dumps({'content': piece}, ensure_ascii=False)}\n\n"
+        yield "data: [DONE]\n\n"
+
+    return StreamingResponse(gen(), media_type="text/event-stream")
