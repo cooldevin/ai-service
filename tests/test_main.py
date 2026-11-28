@@ -110,3 +110,27 @@ def test_chat_stream(monkeypatch):
     assert resp.status_code == 200
     assert "text/event-stream" in resp.headers["content-type"]
     assert "data:" in resp.text
+
+
+def test_extract(monkeypatch):
+    async def fake_json(messages, temperature=0.3):
+        return {"name": "张三", "age": 28, "role": "Java后端",
+                "years_experience": 10, "target_direction": "AI应用"}
+
+    monkeypatch.setattr("ai_service.llm.chat_json", fake_json)
+    resp = client.post("/extract", json={"text": "张三，28岁，Java后端，10年经验，想转AI方向"})
+    assert resp.status_code == 200
+    assert resp.json()["name"] == "张三"
+    assert resp.json()["years_experience"] == 10
+
+
+def test_chat_tools(monkeypatch):
+    async def fake_tools(messages, max_rounds=3):
+        return {"reply": "北京今天晴，12°C；128*46=5888。",
+                "used_tools": [{"tool": "get_weather", "args": {"city": "北京"}},
+                               {"tool": "calculate", "args": {"expression": "128*46"}}]}
+
+    monkeypatch.setattr("ai_service.llm.chat_with_tools", fake_tools)
+    resp = client.post("/chat/tools", json={"message": "北京天气怎么样？128*46等于多少？"})
+    assert resp.status_code == 200
+    assert resp.json()["used_tools"]
